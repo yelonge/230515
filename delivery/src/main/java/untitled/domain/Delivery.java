@@ -47,12 +47,14 @@ public class Delivery {
         return deliveryRepository;
     }
 
-    public void completeDelivery() {
+    public void completeDelivery(
+        CompleteDeliveryCommand completeDeliveryCommand
+    ) {
         DeliveryCompleted deliveryCompleted = new DeliveryCompleted(this);
         deliveryCompleted.publishAfterCommit();
     }
 
-    public void returnDelivery() {
+    public void returnDelivery(ReturnDeliveryCommand returnDeliveryCommand) {
         DeliveryReturned deliveryReturned = new DeliveryReturned(this);
         deliveryReturned.publishAfterCommit();
     }

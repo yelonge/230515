@@ -25,6 +25,7 @@ public class DeliveryController {
     )
     public Delivery completeDelivery(
         @PathVariable(value = "id") Long id,
+        @RequestBody CompleteDeliveryCommand completeDeliveryCommand,
         HttpServletRequest request,
         HttpServletResponse response
     ) throws Exception {
@@ -33,7 +34,7 @@ public class DeliveryController {
 
         optionalDelivery.orElseThrow(() -> new Exception("No Entity Found"));
         Delivery delivery = optionalDelivery.get();
-        delivery.completeDelivery();
+        delivery.completeDelivery(completeDeliveryCommand);
 
         deliveryRepository.save(delivery);
         return delivery;
@@ -46,6 +47,7 @@ public class DeliveryController {
     )
     public Delivery returnDelivery(
         @PathVariable(value = "id") Long id,
+        @RequestBody ReturnDeliveryCommand returnDeliveryCommand,
         HttpServletRequest request,
         HttpServletResponse response
     ) throws Exception {
@@ -54,7 +56,7 @@ public class DeliveryController {
 
         optionalDelivery.orElseThrow(() -> new Exception("No Entity Found"));
         Delivery delivery = optionalDelivery.get();
-        delivery.returnDelivery();
+        delivery.returnDelivery(returnDeliveryCommand);
 
         deliveryRepository.save(delivery);
         return delivery;

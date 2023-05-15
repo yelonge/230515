@@ -67,18 +67,30 @@
                     v-if="!editMode"
                     color="deep-purple lighten-2"
                     text
-                    @click="completeDelivery"
+                    @click="openCompleteDelivery"
             >
                 CompleteDelivery
             </v-btn>
+            <v-dialog v-model="completeDeliveryDiagram" width="500">
+                <CompleteDeliveryCommand
+                        @closeDialog="closeCompleteDelivery"
+                        @completeDelivery="completeDelivery"
+                ></CompleteDeliveryCommand>
+            </v-dialog>
             <v-btn
                     v-if="!editMode"
                     color="deep-purple lighten-2"
                     text
-                    @click="returnDelivery"
+                    @click="openReturnDelivery"
             >
                 ReturnDelivery
             </v-btn>
+            <v-dialog v-model="returnDeliveryDiagram" width="500">
+                <ReturnDeliveryCommand
+                        @closeDialog="closeReturnDelivery"
+                        @returnDelivery="returnDelivery"
+                ></ReturnDeliveryCommand>
+            </v-dialog>
         </v-card-actions>
 
         <v-snackbar
@@ -116,6 +128,8 @@
                 timeout: 5000,
                 text: ''
             },
+            completeDeliveryDiagram: false,
+            returnDeliveryDiagram: false,
         }),
         computed:{
         },
@@ -210,16 +224,17 @@
             change(){
                 this.$emit('input', this.value);
             },
-            async completeDelivery() {
+            async completeDelivery(params) {
                 try {
                     if(!this.offline) {
-                        var temp = await axios.put(axios.fixUrl(this.value._links['completedelivery'].href))
+                        var temp = await axios.put(axios.fixUrl(this.value._links['completedelivery'].href), params)
                         for(var k in temp.data) {
                             this.value[k]=temp.data[k];
                         }
                     }
 
                     this.editMode = false;
+                    this.closeCompleteDelivery();
                 } catch(e) {
                     this.snackbar.status = true
                     if(e.response && e.response.data.message) {
@@ -229,16 +244,23 @@
                     }
                 }
             },
-            async returnDelivery() {
+            openCompleteDelivery() {
+                this.completeDeliveryDiagram = true;
+            },
+            closeCompleteDelivery() {
+                this.completeDeliveryDiagram = false;
+            },
+            async returnDelivery(params) {
                 try {
                     if(!this.offline) {
-                        var temp = await axios.put(axios.fixUrl(this.value._links['returndelivery'].href))
+                        var temp = await axios.put(axios.fixUrl(this.value._links['returndelivery'].href), params)
                         for(var k in temp.data) {
                             this.value[k]=temp.data[k];
                         }
                     }
 
                     this.editMode = false;
+                    this.closeReturnDelivery();
                 } catch(e) {
                     this.snackbar.status = true
                     if(e.response && e.response.data.message) {
@@ -247,6 +269,12 @@
                         this.snackbar.text = e
                     }
                 }
+            },
+            openReturnDelivery() {
+                this.returnDeliveryDiagram = true;
+            },
+            closeReturnDelivery() {
+                this.returnDeliveryDiagram = false;
             },
         },
     }

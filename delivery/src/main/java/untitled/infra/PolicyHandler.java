@@ -30,6 +30,11 @@ public class PolicyHandler {
         @Payload OrderPlaced orderPlaced
     ) {
         OrderPlaced event = orderPlaced;
+        System.out.println(
+            "\n\n##### listener StartDelivery : " + orderPlaced + "\n\n"
+        );
+
+        // Sample Logic //
         Delivery.startDelivery(event);
     }
 
